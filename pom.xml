@@ -31,7 +31,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>3.0.1</version>
+				<version>3.0.5</version>
 				<configuration>
 					<!-- Enables analysis which takes more memory but finds more bugs. If 
 						you run out of memory, changes the value of the effort element to 'low'. -->
@@ -49,11 +49,80 @@
 		<!-- <sourceDirectory>src</sourceDirectory> <resources> <resource> <directory>src</directory> 
 			<excludes> <exclude>**/*.java</exclude> </excludes> </resource> </resources> -->
 		<plugins>
+	      <plugin>
+			<groupId>org.jacoco</groupId>
+			<artifactId>jacoco-maven-plugin</artifactId>
+			<version>0.7.9</version>
+			<configuration>
+				<skip>false</skip>
+				<check/>
+				<rules>
+				<rule>
+					<element>CLASS</element>
+					<excludes>
+						<exclude>*Test</exclude>
+					</excludes>
+					<limits>
+						<limit>
+							<counter>LINE</counter>
+							<value>COVEREDRATIO</value>
+							<minimum>0.50</minimum>
+						</limit>
+					</limits>
+				</rule>
+				</rules>
+			</configuration>
+			<executions>
+				<execution>
+				<id>prepare-agent</id>
+				<goals>
+					<goal>prepare-agent</goal>
+				</goals>
+				</execution>
+				<execution>
+				<id>report</id>
+				<phase>prepare-package</phase>
+				<goals>
+					<goal>report</goal>
+				</goals>
+				<configuration>
+					<outputDirectory>${project.build.directory}/jacoco</outputDirectory>
+				</configuration>
+				</execution>
+				<execution>
+				<id>check</id>
+				<goals>
+					<goal>check</goal>
+				</goals>
+				<configuration>
+					<check>
+					<instructionRatio>100</instructionRatio>
+					<branchRatio>95</branchRatio>
+					<lineRatio>90</lineRatio>
+					<methodRatio>90</methodRatio>
+					<classRatio>90</classRatio>
+					</check>
+				</configuration>
+				</execution>
+			</executions>
+			</plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
         <version>2.5.1</version>
       </plugin>
+            <plugin>
+              <groupId>org.owasp</groupId>
+              <artifactId>dependency-check-maven</artifactId>
+              <version>6.0.3</version>
+              <executions>
+                  <execution>
+                      <goals>
+                          <goal>check</goal>
+                      </goals>
+                  </execution>
+              </executions>
+            </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
@@ -62,7 +131,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>3.0.1</version>
+				<version>3.0.5</version>
 				<configuration>
 					<!-- Enables analysis which takes more memory but finds more bugs. If 
 						you run out of memory, changes the value of the effort element to 'Low'. -->
@@ -120,63 +189,6 @@
 					<warName>Spring3HibernateApp</warName>
 				</configuration>
 			</plugin>
-			      <plugin>
-			      <groupId>org.jacoco</groupId>
-			      <artifactId>jacoco-maven-plugin</artifactId>
-			      <version>0.7.9</version>
-			      <configuration>
-				<skip>false</skip>
-				<check/>
-				<rules>
-				  <rule>
-				    <element>CLASS</element>
-				    <excludes>
-					  <exclude>*Test</exclude>
-				    </excludes>
-				    <limits>
-					  <limit>
-					    <counter>LINE</counter>
-					    <value>COVEREDRATIO</value>
-					    <minimum>0.50</minimum>
-					  </limit>
-				    </limits>
-				  </rule>
-				</rules>
-			      </configuration>
-			      <executions>
-				<execution>
-				  <id>prepare-agent</id>
-				  <goals>
-				    <goal>prepare-agent</goal>
-				  </goals>
-				</execution>
-				<execution>
-				  <id>report</id>
-				  <phase>prepare-package</phase>
-				  <goals>
-				    <goal>report</goal>
-				  </goals>
-				  <configuration>
-				    <outputDirectory>${project.build.directory}/jacoco</outputDirectory>
-				  </configuration>
-				</execution>
-				<execution>
-				  <id>check</id>
-				  <goals>
-				    <goal>check</goal>
-				  </goals>
-				  <configuration>
-				    <check>
-				      <instructionRatio>100</instructionRatio>
-				      <branchRatio>95</branchRatio>
-				      <lineRatio>90</lineRatio>
-				      <methodRatio>90</methodRatio>
-				      <classRatio>90</classRatio>
-				    </check>
-				  </configuration>
-				</execution>
-			      </executions>
-			    </plugin>
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat6-maven-plugin</artifactId>
